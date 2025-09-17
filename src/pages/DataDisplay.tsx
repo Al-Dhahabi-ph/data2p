@@ -153,9 +153,9 @@ const DataDisplay = () => {
               onClick={handleFullscreen}
               size="icon"
               variant="secondary"
-              className="absolute top-4 right-4 z-10 bg-background/80 hover:bg-background/90 backdrop-blur-sm"
+              className="absolute top-2 right-2 md:top-4 md:right-4 z-20 bg-background/90 hover:bg-background shadow-lg border-2 border-border/50 w-10 h-10 md:w-8 md:h-8"
             >
-              <Maximize className="w-4 h-4" />
+              <Maximize className="w-5 h-5 md:w-4 md:h-4" />
             </Button>
           </div>
         </div>
