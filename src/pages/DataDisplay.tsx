@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Download, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Download, ExternalLink, Maximize } from 'lucide-react';
 import { database } from '@/lib/firebase';
 import { ref, onValue } from 'firebase/database';
 import { convertGoogleDriveLink, convertYouTubeLink, isYouTubeLink, isGoogleDriveLink } from '@/utils/linkConverter';
@@ -24,6 +24,7 @@ const DataDisplay = () => {
     viewUrl: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (!resourceId) return;
@@ -97,6 +98,10 @@ const DataDisplay = () => {
     }
   };
 
+  const handleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   const leftAction = (
     <Button 
       variant="ghost" 
@@ -134,15 +139,24 @@ const DataDisplay = () => {
     <Layout title={resource.title} leftAction={leftAction}>
       <div className="space-y-6">
         {/* Iframe Container */}
-        <div className="w-full">
-          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+        <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-background' : 'w-full'}`}>
+          <div className={`relative w-full ${isFullscreen ? 'h-full' : ''}`} style={!isFullscreen ? { paddingBottom: '56.25%' } : {}}>
             <iframe
               src={convertedLinks.embedUrl}
-              className="absolute top-0 left-0 w-full h-full rounded-lg border border-border"
+              className={`${isFullscreen ? 'w-full h-full' : 'absolute top-0 left-0 w-full h-full'} rounded-lg border border-border`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               title={resource.title}
             />
+            {/* Floating Fullscreen Button */}
+            <Button
+              onClick={handleFullscreen}
+              size="icon"
+              variant="secondary"
+              className="absolute top-4 right-4 z-10 bg-background/80 hover:bg-background/90 backdrop-blur-sm"
+            >
+              <Maximize className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 
